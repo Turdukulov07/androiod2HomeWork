@@ -63,7 +63,7 @@ public class HomeFragment extends Fragment implements OnclickPosition {
             @Override
             public void onClick(View view) {
                 NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
-                navController.navigate(R.id.navigation_profile);
+                navController.navigate(R.id.action_navigation_home_to_navigation_note);
 
             }
         });

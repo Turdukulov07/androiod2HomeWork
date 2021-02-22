@@ -69,11 +69,16 @@ public class NoteFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 NoteFragment.this.openGallery();
-                NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
-                navController.navigate(R.id.navigation_note);
+                close();
+
             }
         });
 
+    }
+
+    private void close() {
+        NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
+        navController.navigate(R.id.navigation_note);
     }
 
     private void save() {

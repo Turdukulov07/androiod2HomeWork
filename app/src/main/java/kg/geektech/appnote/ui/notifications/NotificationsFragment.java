@@ -11,6 +11,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import kg.geektech.appnote.R;
 
@@ -30,6 +32,12 @@ public class NotificationsFragment extends Fragment {
                 textView.setText(s);
             }
         });
+        close();
         return root;
+    }
+
+    private void close() {
+        NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
+        navController.navigate(R.id.navigation_profile);
     }
 }
