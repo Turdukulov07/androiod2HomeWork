@@ -12,7 +12,7 @@
         tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/action_navigation_home_to_navigation_note"
-            app:destination="@id/navigation_note" />
+            app:destination="@id/noteFragment" />
     </fragment>
     <fragment
         android:id="@+id/navigation_dashboard"
@@ -29,10 +29,14 @@
         android:id="@+id/navigation_profile"
         android:name="kg.geektech.appnote.ui.profile.ProfileFragment"
         android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_navigation_profile_to_editFragment"
+            app:destination="@id/editFragment" />
+    </fragment>
     <fragment
 
-        android:id="@+id/navigation_note"
+        android:id="@+id/noteFragment"
         android:name="kg.geektech.appnote.ui.home.NoteFragment"
         android:label="fragment_note"
         tools:layout="@layout/fragment_note"/>
@@ -41,6 +45,11 @@
         android:name="kg.geektech.appnote.board.BoardFragment"
         android:label="fragment_board"
         tools:layout="@layout/fragment_board" />
+    <fragment
+        android:id="@+id/editFragment"
+        android:name="kg.geektech.appnote.ui.EditFragment"
+        android:label="Редактировать"
+        tools:layout="@layout/fragment_edit" />
 
 </navigation>
 

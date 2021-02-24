@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 
+import kg.geektech.appnote.Prefs;
 import kg.geektech.appnote.R;
 
 
@@ -106,6 +107,8 @@ public class BoardFragment extends Fragment {
 
 
     private void close(){
+        Prefs prefs =new Prefs(requireContext());
+        prefs.saveIsShown();
         NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
         navController.navigate(R.id.navigation_home);
     }

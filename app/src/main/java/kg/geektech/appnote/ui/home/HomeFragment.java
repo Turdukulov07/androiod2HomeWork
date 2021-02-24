@@ -4,9 +4,11 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,32 +22,37 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import kg.geektech.appnote.App;
+import kg.geektech.appnote.ItemClickListener;
+import kg.geektech.appnote.Prefs;
 import kg.geektech.appnote.R;
-import kg.geektech.appnote.ui.profile.OnclickPosition;
+import kg.geektech.appnote.models.Note;
 
-public class HomeFragment extends Fragment implements OnclickPosition {
+public class HomeFragment extends Fragment implements ItemClickListener {
 
     private RecyclerView recyclerView;
     private NoteAdapter adapter;
+    private int position;
+    private Prefs prefs;
+    private boolean update = false;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        adapter = new NoteAdapter(this);
-        ArrayList<String> list = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
-            list = new ArrayList<>();
-            list.add("Нурумбет");
-            list.add("Айдар");
-            list.add("Айдай");
-            list.add("Ислам");
-            list.add("Айтол");
-            list.add("Айтол");
-            list.add("Мээрим");
-        }
-        adapter.addList(list);
+        adapter = new NoteAdapter();
+        adapter.setClickListener(this);
+        ArrayList<Note> list = new ArrayList<>();
+        loadData();
 
+
+    }
+
+    private void loadData() {
+        List<Note> list = App.getAppDatabase().noteDao().getAll();
+        adapter.setList(list);
     }
 
 
@@ -59,16 +66,23 @@ public class HomeFragment extends Fragment implements OnclickPosition {
         super.onViewCreated(view, savedInstanceState);
         recyclerView = view.findViewById(R.id.recyclerView);
         initList();
-        view.findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton fab = view.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
-                navController.navigate(R.id.action_navigation_home_to_navigation_note);
 
+                openNote();
             }
         });
 
         setFragmentListener();
+    }
+
+    private void openNote() {
+        NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
+        navController.navigate(R.id.noteFragment);
+
+
     }
 
     private void setFragmentListener() {
@@ -76,28 +90,100 @@ public class HomeFragment extends Fragment implements OnclickPosition {
                 getViewLifecycleOwner(), new FragmentResultListener() {
                     @Override
                     public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-                        String text = result.getString("text");
-                        adapter.addItem(text);
+                   Note note = (Note) result.getSerializable("note");
+                        adapter.addItem(note);
+                        if (update) {
+                            adapter.updateItem(position,note);
+                        } else {
+                            adapter.addItem(note);
+                        }
                     }
                 });
+        }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_options, menu);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        prefs = new Prefs(requireContext());
+        switch (item.getItemId()) {
+            case R.id.clear_settings:
+                alertDialogClearSettings();
+                return true;
+
+
+            case R.id.sort_database:
+                sort_database();
+                return true;
+
+            case  R.id.sortByDate:
+                SortDyDate();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void SortDyDate() {
+        adapter.sortListByDate(App.getAppDatabase().noteDao().sortAllByDate());
+
+    }
+
+    private void sort_database() {
+        adapter.sortList(App.getAppDatabase().noteDao().sortAll());
 
 
     }
+
+    private void alertDialogClearSettings() {
+        new AlertDialog.Builder(getContext())
+                .setIcon(android.R.drawable.ic_delete)
+                .setTitle("Are you sure?")
+                .setMessage("Do you want to clear settings?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        prefs.clearSettings();
+                        requireActivity().finish();
+                    }
+                })
+                .setNegativeButton("No", null)
+                .show();
+    }
+
 
     private void initList() {
         recyclerView.setAdapter(adapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
+        adapter.setClickListener(new ItemClickListener() {
+            @Override
+            public void onItemClick(int position, Note txt) {
+                position = position;
+                update = true;
+                Note note = adapter.getItem(position);
+                openForm(note);
+            }
+        });
+    }
+
+    private void openForm(Note note) {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("note", note);
+        NavController navController = Navigation.findNavController(requireActivity(),
+                R.id.nav_host_fragment);
+        navController.navigate(R.id.noteFragment, bundle);
     }
 
 
     @Override
-    public void clickListener(int position) {
-        Toast.makeText(requireContext(), "позиция " + position, Toast.LENGTH_LONG).show();
-
-    }
-
-    @Override
-    public void longClick(int adapterPosition) {
-
+    public void onItemClick(int position, Note txt) {
+        Bundle bundle = new Bundle();
+        getParentFragmentManager().setFragmentResult("text", bundle);
+        this.position = position;
+        Navigation.findNavController(requireActivity(), R.id.nav_host_fragment).navigate(R.id.noteFragment);
     }
 }

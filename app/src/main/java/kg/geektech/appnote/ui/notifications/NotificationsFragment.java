@@ -34,6 +34,8 @@ public class NotificationsFragment extends Fragment {
         });
         close();
         return root;
+
+
     }
 
     private void close() {
