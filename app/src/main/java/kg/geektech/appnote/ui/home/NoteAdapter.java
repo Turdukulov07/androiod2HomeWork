@@ -24,15 +24,12 @@ import kg.geektech.appnote.models.Note;
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
 
     private ItemClickListener listener;
-
     private static ArrayList<Note> list;
 
     public NoteAdapter(){
         list = new ArrayList<>();
         list.addAll(App.getDatabase().noteDao().getAll());
     }
-
-
 
     @NonNull
     @Override
