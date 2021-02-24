@@ -1,16 +1,13 @@
 package kg.geektech.appnote.room;
 
-import android.os.Parcelable;
 
 import androidx.room.Dao;
-import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
-
-
 import java.util.List;
-
 import kg.geektech.appnote.models.Note;
+
+
 
 @Dao
 public interface NoteDao {
@@ -24,7 +21,6 @@ public interface NoteDao {
 
     @Query("SELECT * FROM 'note'ORDER BY title ASC")
     List<Note> sortAll();
-
 
     @Query("SELECT * FROM 'note'ORDER BY date ASC")
     List<Note> sortAllByDate();

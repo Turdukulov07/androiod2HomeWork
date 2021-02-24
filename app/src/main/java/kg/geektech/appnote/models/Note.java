@@ -13,7 +13,11 @@ public class Note implements Serializable {
     private long id;
     private String title;
     private String date;
-
+    private long createdAt;
+    public Note() {
+    }
+    public Note(String text) {
+    }
 
     public String getDate() {
         return date;
@@ -21,13 +25,6 @@ public class Note implements Serializable {
 
     public void setDate(String date) {
         this.date = date;
-    }
-
-
-    private long createdAt;
-    public Note() {
-    }
-    public Note(String text) {
     }
 
 

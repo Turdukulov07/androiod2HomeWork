@@ -116,7 +116,6 @@ public class HomeFragment extends Fragment implements ItemClickListener {
                 alertDialogClearSettings();
                 return true;
 
-
             case R.id.sort_database:
                 sort_database();
                 return true;
@@ -162,7 +161,6 @@ public class HomeFragment extends Fragment implements ItemClickListener {
         adapter.setClickListener(new ItemClickListener() {
             @Override
             public void onItemClick(int position, Note txt) {
-                position = position;
                 update = true;
                 Note note = adapter.getItem(position);
                 openForm(note);
@@ -180,7 +178,7 @@ public class HomeFragment extends Fragment implements ItemClickListener {
 
 
     @Override
-    public void onItemClick(int position, Note txt) {
+    public void onItemClick(int position, Note note) {
         Bundle bundle = new Bundle();
         getParentFragmentManager().setFragmentResult("text", bundle);
         this.position = position;

@@ -1,18 +1,13 @@
 package kg.geektech.appnote.ui.home;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentResultListener;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +20,6 @@ import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import kg.geektech.appnote.App;
-import kg.geektech.appnote.MainActivity;
 import kg.geektech.appnote.R;
 import kg.geektech.appnote.models.Note;
 
@@ -33,7 +27,7 @@ public class NoteFragment extends Fragment {
     private NoteAdapter adapter;
     CircleImageView circleImageView;
     private ActivityResultLauncher<String> content;
-
+    private Note note;
     private Button button;
     private EditText editText;
 
@@ -64,6 +58,7 @@ public class NoteFragment extends Fragment {
                 }
             }
         });
+
         circleImageView = view.findViewById(R.id.circleImage);
         circleImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,13 +69,13 @@ public class NoteFragment extends Fragment {
 
             }
         });
+        note = (Note) requireArguments().getSerializable("note");
+        if (note != null)
+            editText.setText(note.getTitle());
 
     }
 
-    private void close() {
-        NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
-        navController.navigateUp();
-    }
+
 
     private void save() {
         String text = editText.getText().toString();
@@ -93,6 +88,10 @@ public class NoteFragment extends Fragment {
 
         Toast.makeText(getContext(), "операция успешно добавлена", Toast.LENGTH_LONG).show();
 
+    }
+    private void close() {
+        NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
+        navController.navigateUp();
     }
 
     private void openGallery() {
