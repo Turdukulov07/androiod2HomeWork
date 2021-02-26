@@ -47,8 +47,11 @@ public class NoteFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        button = view.findViewById(R.id.btnSave);
+        if (getArguments() != null)
+            note = (Note) getArguments().getSerializable("note");
         editText = view.findViewById(R.id.editText);
+        if (note != null) editText.setText(note.getTitle());
+        button = view.findViewById(R.id.btnSave);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,12 +79,19 @@ public class NoteFragment extends Fragment {
     }
 
 
-
     private void save() {
+
         String text = editText.getText().toString();
-        Note note = new Note(text);
-        note.setCreatedAt(System.currentTimeMillis());
-        App.getDatabase().noteDao().insert(note);
+        if (note == null) {
+            note = new Note(text);
+            note.setCreatedAt(System.currentTimeMillis());
+            App.getDatabase().noteDao().insert(note);
+        }else{
+            note.setTitle(text);
+            App.getDatabase().noteDao().update(note);
+
+        }
+
         Bundle bundle = new Bundle();
         bundle.putSerializable("text", note);
         getParentFragmentManager().setFragmentResult("rk_note", bundle);
@@ -89,6 +99,7 @@ public class NoteFragment extends Fragment {
         Toast.makeText(getContext(), "операция успешно добавлена", Toast.LENGTH_LONG).show();
 
     }
+
     private void close() {
         NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
         navController.navigateUp();

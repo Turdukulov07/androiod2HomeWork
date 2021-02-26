@@ -180,7 +180,7 @@ public class HomeFragment extends Fragment implements ItemClickListener {
     @Override
     public void onItemClick(int position, Note note) {
         Bundle bundle = new Bundle();
-        getParentFragmentManager().setFragmentResult("text", bundle);
+        getParentFragmentManager().setFragmentResult("note", bundle);
         this.position = position;
         Navigation.findNavController(requireActivity(), R.id.nav_host_fragment).navigate(R.id.noteFragment);
     }

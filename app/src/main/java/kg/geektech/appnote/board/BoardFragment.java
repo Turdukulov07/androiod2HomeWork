@@ -26,7 +26,7 @@ import kg.geektech.appnote.R;
 
 
 public class BoardFragment extends Fragment {
-    private Button buttonNext, buttonSkip;
+    private Button buttonSkip;
 
     private LinearLayout linearLayoutTabIncurs;
 
@@ -42,7 +42,6 @@ public class BoardFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         linearLayoutTabIncurs = view.findViewById(R.id.tab_indicator);
-        buttonNext = view.findViewById(R.id.button_next);
         buttonSkip = view.findViewById(R.id.button_skip);
         buttonSkip.setOnClickListener(view1 -> close());
         ViewPager2 viewPager = view.findViewById(R.id.viewPager);

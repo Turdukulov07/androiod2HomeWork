@@ -22,6 +22,7 @@ public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.ViewHolder> 
     private String[] desc = new String[]{"Запомни одну фразу", "ВСЕ БУДЕТ", "но не СРАЗУ"};
     private int[] images = new int[]{R.drawable.zap, R.drawable.milll, R.drawable.programmer};
 
+    private OnStartClickListener onStartClickListener;
 
     //с начала обьвит интерфейс как класс
     public interface OnStartClickListener {
@@ -29,8 +30,6 @@ public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.ViewHolder> 
 
     }
 
-    //потом его обьивит так
-    private OnStartClickListener onStartClickListener;
 
 
     public BoardAdapter() {
@@ -82,10 +81,13 @@ public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.ViewHolder> 
         }
 
         public void bind(int position) {
-            btnStart.setVisibility(View.GONE);
             textTitle.setText(titles[position]);
             textDesc.setText(desc[position]);
             imageView.setImageResource(images[position]);
+            if (position == 2) btnStart.setVisibility(View.VISIBLE);
+            else btnStart.setVisibility(View.INVISIBLE);
+
+
         }
     }
 }
