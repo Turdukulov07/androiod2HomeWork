@@ -10,6 +10,9 @@
 
     <color name="red">#FF4081</color>
     <color name="grey">#84818A</color>
-    <color name="gray">#673AB7</color>
+    <color name="GradeGray">#bdc3c7</color>
+    <color name="nine">#FFFDE4</color>
+    <color name="ten">#005AA7</color>
+    <color name="green">#0f9b0f</color>
 
 </resources>

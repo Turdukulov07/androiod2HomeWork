@@ -1,5 +1,6 @@
 package kg.geektech.appnote.ui.home;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,7 +9,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
-import java.util.List;
 import kg.geektech.appnote.App;
 import kg.geektech.appnote.OnItemClickListener;
 import kg.geektech.appnote.R;
@@ -30,7 +30,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_note, parent, false);
 
@@ -40,6 +39,11 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.bind(list.get(position));
+        if (position % 2 == 0){
+            holder.itemView.setBackgroundColor(Color.GRAY);
+        }else{
+            holder.itemView.setBackgroundColor(Color.YELLOW);
+        }
     }
 
     @Override
@@ -56,11 +60,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
         notifyItemInserted(list.indexOf(note));
     }
 
-    public void setList(List<Note> list) {
-        this.list.addAll(list);
-        notifyDataSetChanged();
-    }
-
     public Note getItem(int position) {
         return list.get(position);
     }
@@ -73,7 +72,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             itemView.setOnClickListener(v ->
-                    onItemClickListener.onClick(getAdapterPosition()));
+                    onItemClickListener.onItemClick(getAdapterPosition()));
             textTitle = itemView.findViewById(R.id.text_title);
             textDate = itemView.findViewById(R.id.text_date);
         }

@@ -1,5 +1,5 @@
 package kg.geektech.appnote;
 
 public interface OnItemClickListener {
-    void onClick(int position);
+    void onItemClick(int position);
 }

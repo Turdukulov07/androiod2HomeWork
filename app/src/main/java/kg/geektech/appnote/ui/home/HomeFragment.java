@@ -22,18 +22,12 @@ import kg.geektech.appnote.Prefs;
 import kg.geektech.appnote.R;
 import kg.geektech.appnote.models.Note;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements OnItemClickListener {
 
     private RecyclerView recyclerView;
     private NoteAdapter adapter = new NoteAdapter();
-    private int position;
     private Prefs prefs;
 
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -84,7 +78,7 @@ public class HomeFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onClick(int position) {
+            public void onItemClick(int position) {
                 Note note = adapter.getItem(position);
                 openForm(note);
             }
@@ -104,5 +98,10 @@ public class HomeFragment extends Fragment {
         NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
         navController.navigate(R.id.noteFragment);
 
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        return;
     }
 }

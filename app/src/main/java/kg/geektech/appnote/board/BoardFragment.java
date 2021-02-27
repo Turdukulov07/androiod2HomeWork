@@ -51,21 +51,17 @@ public class BoardFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         linearLayoutTabIncurs = view.findViewById(R.id.tab_indicator);
         buttonNext = view.findViewById(R.id.button_next_onboard);
-
         buttonSkip = view.findViewById(R.id.button_skip_onboard);
         buttonSkip.setOnClickListener(v -> close());
 
         List<BoardModel> listBoard = new ArrayList<>();
-        listBoard.add(new BoardModel("The seed is the most important", "Take care of your parents", R.raw.familylove));
-        listBoard.add(new BoardModel("Love each other", "When you look at your life, the greatest happiness's are family happiness's", R.raw.selfie));
-        listBoard.add(new BoardModel("You don’t choose your family. They are God’s gift to you", "The family is one of nature’s masterpieces", R.raw.children));
 
         ViewPager2 viewPager2 = view.findViewById(R.id.view_pager);
         BoardAdapter adapter = new BoardAdapter(this.getContext(), listBoard);
         viewPager2.setAdapter(adapter);
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onClick(int position) {
+            public void onItemClick(int position) {
                 close();
             }
         });

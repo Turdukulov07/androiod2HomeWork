@@ -5,27 +5,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.airbnb.lottie.LottieAnimationView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import kg.geektech.appnote.OnItemClickListener;
 import kg.geektech.appnote.R;
 
 public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.ViewHolder> {
-    private String[] titles = new String[]{"Fast", "Free", "Powerful"};
-    private String[] desc = new String[]{"Запомни одну фразу", "ВСЕ БУДЕТ", "но не СРАЗУ"};
-    private int[] images = new int[]{R.drawable.zap, R.drawable.milll, R.drawable.programmer};
+    private String[] titles = new String[]{"The seed is the most important", "Love each other", "You don’t choose your family"};
+    private String[] desc = new String[]{"Take care of your parents", "When you look at your life, the greatest happiness's are family happiness's", "The family is one of nature’s masterpieces"};
+    private int[] images = new int[]{R.raw.familylove, R.raw.selfie, R.raw.children};
+
 
 
     private List<BoardModel> listBoardModels;
@@ -75,7 +71,7 @@ public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.ViewHolder> 
             textTitle = itemView.findViewById(R.id.textTitle);
             buttonGetStarted = itemView.findViewById(R.id.button_skip_onboard);
             buttonGetStarted.setOnClickListener(v ->
-                    onItemClickListener.onClick(getAdapterPosition()));
+                    onItemClickListener.onItemClick(getAdapterPosition()));
         }
 
         public void bind(BoardModel boardModel) {
