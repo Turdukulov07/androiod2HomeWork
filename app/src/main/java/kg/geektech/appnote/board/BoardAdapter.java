@@ -1,5 +1,6 @@
 package kg.geektech.appnote.board;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +14,12 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
+import com.airbnb.lottie.LottieAnimationView;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import kg.geektech.appnote.OnItemClickListener;
 import kg.geektech.appnote.R;
 
 public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.ViewHolder> {
@@ -22,72 +27,66 @@ public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.ViewHolder> 
     private String[] desc = new String[]{"Запомни одну фразу", "ВСЕ БУДЕТ", "но не СРАЗУ"};
     private int[] images = new int[]{R.drawable.zap, R.drawable.milll, R.drawable.programmer};
 
-    private OnStartClickListener onStartClickListener;
 
-    //с начала обьвит интерфейс как класс
-    public interface OnStartClickListener {
-        void onClick();
+    private List<BoardModel> listBoardModels;
+    private LayoutInflater layoutInflater;
 
-    }
+    private Context context;
+    private OnItemClickListener onItemClickListener;
 
-
-
-    public BoardAdapter() {
-
-
+    public BoardAdapter(Context context, List<BoardModel> listBoardModels) {
+        this.context = context;
+        this.layoutInflater = LayoutInflater.from(context);
+        this.listBoardModels = listBoardModels;
     }
 
     @NonNull
     @Override
-    public BoardAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).
-                inflate(R.layout.pager_bord, parent, false);
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.pager_bord, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull BoardAdapter.ViewHolder holder, int position) {
-        holder.bind(position);
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        holder.bind(listBoardModels.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return 3;
+        return listBoardModels.size();
     }
 
-    public void setOnStartClickListener(OnStartClickListener onStartClickListener) {
-        this.onStartClickListener = onStartClickListener;
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
     }
-
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+
         private TextView textTitle, textDesc;
-        ;
-        private LinearLayout linearLayoutTabIncurs;
-        private Button btnStart;
-        private ImageView imageView;
+        private LottieAnimationView lottieAnimationView;
+        private Button buttonGetStarted;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            textTitle = itemView.findViewById(R.id.textTitle);
-            imageView = itemView.findViewById(R.id.imageView);
-            btnStart = itemView.findViewById(R.id.btnStart);
+            lottieAnimationView = itemView.findViewById(R.id.lottie_animation_view);
             textDesc = itemView.findViewById(R.id.textDesc);
-            btnStart.setOnClickListener(v -> {
-                //и потом его вызвать
-                onStartClickListener.onClick();
-
-            });
+            textTitle = itemView.findViewById(R.id.textTitle);
+            buttonGetStarted = itemView.findViewById(R.id.button_skip_onboard);
+            buttonGetStarted.setOnClickListener(v ->
+                    onItemClickListener.onClick(getAdapterPosition()));
         }
 
-        public void bind(int position) {
-            textTitle.setText(titles[position]);
-            textDesc.setText(desc[position]);
-            imageView.setImageResource(images[position]);
-            if (position == 2) btnStart.setVisibility(View.VISIBLE);
-            else btnStart.setVisibility(View.INVISIBLE);
-
-
+        public void bind(BoardModel boardModel) {
+            //TODO:   3rd Home Work - init. views & showing button on the 3rd page
+            buttonGetStarted.setVisibility(View.GONE);
+            textTitle.setText(boardModel.getTitle());
+            textDesc.setText(boardModel.getTitleBelow());
+            lottieAnimationView.setAnimation(boardModel.getImages());
+            if (getAdapterPosition() == listBoardModels.size() - 1) {
+                buttonGetStarted.setVisibility(View.VISIBLE);
+            }
         }
     }
 }

@@ -14,6 +14,9 @@ private SharedPreferences preferences;
     public boolean isShown(){
       return   preferences.getBoolean("isShown", false);
     }
+    public void saveBoardStatus() {
+        preferences.edit().putBoolean("isShown", true).apply();
+    }
 
     public void clearSettings() {
 

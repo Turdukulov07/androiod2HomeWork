@@ -20,21 +20,29 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import kg.geektech.appnote.OnItemClickListener;
 import kg.geektech.appnote.Prefs;
 import kg.geektech.appnote.R;
 
 
 public class BoardFragment extends Fragment {
-    private Button buttonSkip;
 
+    private Button buttonSkip, buttonNext;
+    private int position = 0;
     private LinearLayout linearLayoutTabIncurs;
 
-
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         return inflater.inflate(R.layout.fragment_board, container, false);
     }
 
@@ -42,28 +50,34 @@ public class BoardFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         linearLayoutTabIncurs = view.findViewById(R.id.tab_indicator);
-        buttonSkip = view.findViewById(R.id.button_skip);
-        buttonSkip.setOnClickListener(view1 -> close());
-        ViewPager2 viewPager = view.findViewById(R.id.viewPager);
-        BoardAdapter adapter = new BoardAdapter();
+        buttonNext = view.findViewById(R.id.button_next_onboard);
 
-        adapter.setOnStartClickListener(new BoardAdapter.OnStartClickListener() {
+        buttonSkip = view.findViewById(R.id.button_skip_onboard);
+        buttonSkip.setOnClickListener(v -> close());
+
+        List<BoardModel> listBoard = new ArrayList<>();
+        listBoard.add(new BoardModel("The seed is the most important", "Take care of your parents", R.raw.familylove));
+        listBoard.add(new BoardModel("Love each other", "When you look at your life, the greatest happiness's are family happiness's", R.raw.selfie));
+        listBoard.add(new BoardModel("You don’t choose your family. They are God’s gift to you", "The family is one of nature’s masterpieces", R.raw.children));
+
+        ViewPager2 viewPager2 = view.findViewById(R.id.view_pager);
+        BoardAdapter adapter = new BoardAdapter(this.getContext(), listBoard);
+        viewPager2.setAdapter(adapter);
+        adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onClick() {
+            public void onClick(int position) {
                 close();
-
             }
         });
-        viewPager.setAdapter(adapter);
-        //если кнопку назад нажимает тогда финиш будет через этот код
-        requireActivity()
-                .getOnBackPressedDispatcher()
-                .addCallback(getViewLifecycleOwner(),new OnBackPressedCallback(true) {//getViewLifecycleOwner() когда мы открываем борд этот код работает только на этом проекте
+
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(),
+                new OnBackPressedCallback(true) {
                     @Override
                     public void handleOnBackPressed() {
                         requireActivity().finish();
                     }
                 });
+
         ImageView[] indicators = new ImageView[adapter.getItemCount()];
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
@@ -76,7 +90,7 @@ public class BoardFragment extends Fragment {
             linearLayoutTabIncurs.addView(indicators[i]);
         }
         setCurrentIndicators(0);
-        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+        viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
@@ -84,8 +98,18 @@ public class BoardFragment extends Fragment {
             }
         });
 
-    }
+        buttonNext.setOnClickListener(v -> {
+            position = viewPager2.getCurrentItem();
+            if (position < listBoard.size()) {
+                position++;
+                viewPager2.setCurrentItem(position);
+            }
 
+            if (position == listBoard.size() - 1) {
+                buttonNext.setVisibility(View.INVISIBLE);
+            }
+        });
+    }
 
     private void setCurrentIndicators(int index) {
         int childCount = linearLayoutTabIncurs.getChildCount();
@@ -101,15 +125,10 @@ public class BoardFragment extends Fragment {
         }
     }
 
-
-
-
-
-    private void close(){
-        Prefs prefs =new Prefs(requireContext());
-        prefs.saveIsShown();
+    private void close() {
+        Prefs prefs = new Prefs(requireContext());
+        prefs.saveBoardStatus();
         NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
-        navController.navigate(R.id.navigation_home);
+        navController.navigateUp();
     }
-
 }

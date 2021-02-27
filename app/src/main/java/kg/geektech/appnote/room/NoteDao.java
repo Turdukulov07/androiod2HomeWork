@@ -28,12 +28,4 @@ public interface NoteDao {
 
     @Update
     void update(Note note);
-
-
-
-    @Query("SELECT * FROM 'note'ORDER BY title ASC")
-    List<Note> sortAll();
-
-    @Query("SELECT * FROM 'note'ORDER BY date ASC")
-    List<Note> sortAllByDate();
 }

@@ -24,19 +24,9 @@ import kg.geektech.appnote.R;
 import kg.geektech.appnote.models.Note;
 
 public class NoteFragment extends Fragment {
-    private NoteAdapter adapter;
-    CircleImageView circleImageView;
     private ActivityResultLauncher<String> content;
     private Note note;
-    private Button button;
     private EditText editText;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        ArrayList<String> list = new ArrayList<>();
-
-    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -51,52 +41,33 @@ public class NoteFragment extends Fragment {
             note = (Note) getArguments().getSerializable("note");
         editText = view.findViewById(R.id.editText);
         if (note != null) editText.setText(note.getTitle());
-        button = view.findViewById(R.id.btnSave);
-        button.setOnClickListener(new View.OnClickListener() {
+        Button btnSave = view.findViewById(R.id.btnSave);
+        btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (editText != null) {
-
-
+                    save();
+                    close();
                 }
-            }
-        });
-
-        circleImageView = view.findViewById(R.id.circleImage);
-        circleImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                NoteFragment.this.openGallery();
-                save();
-                close();
 
             }
         });
-        note = (Note) requireArguments().getSerializable("note");
-        if (note != null)
-            editText.setText(note.getTitle());
-
     }
 
-
     private void save() {
-
         String text = editText.getText().toString();
         if (note == null) {
             note = new Note(text);
             note.setCreatedAt(System.currentTimeMillis());
             App.getDatabase().noteDao().insert(note);
-        }else{
+        } else {
             note.setTitle(text);
             App.getDatabase().noteDao().update(note);
 
         }
-
         Bundle bundle = new Bundle();
         bundle.putSerializable("text", note);
         getParentFragmentManager().setFragmentResult("rk_note", bundle);
-
-        Toast.makeText(getContext(), "операция успешно добавлена", Toast.LENGTH_LONG).show();
 
     }
 
@@ -104,9 +75,4 @@ public class NoteFragment extends Fragment {
         NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
         navController.navigateUp();
     }
-
-    private void openGallery() {
-        content.launch("image/*");
-    }
 }
-
